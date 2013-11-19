@@ -1,16 +1,13 @@
 var fs = require('fs');
 var path = require('path');
 var stream = require('stream');
-
-String.prototype.endsWith = function(suffix) {
-  return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
+var normalize = require('../normalize');
 
 module.exports = function FileStore(base) {
   var self = this;
 
   function filePath (req) {
-    var url = req.url.endsWith('/') ? req.url.slice(0, -1) : req.url;
+    var url = normalize(req.url);
     return path.join(base, req.method, url);
   }
 
