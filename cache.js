@@ -35,6 +35,7 @@ function rebase (url1, url2) {
   var u1 = url.parse(url1);
   var u2 = url.parse(url2);
   u1.pathname = path.join(u1.pathname, u2.pathname);
+  u1.search = u2.search;
   return url.format(u1);
 }
 
