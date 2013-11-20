@@ -7,11 +7,11 @@
 ```
 $ git clone https://github.com/stenington/dictaphone.git
 $ cd dictaphone
-$ bin/dictaphone.js somesite.org
+$ bin/dictaphone.js example.org
 $ curl localhost:8080/some/path
 ```
 
-In this example, `curl` will return http://somesite.org/some/path to you, and future requests for it
+In this example, `curl` will return http://example.org/some/path to you, and future requests for it
 will be returned from dictaphone's cache while it remains running.
 
 ## Examples
