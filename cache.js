@@ -9,7 +9,7 @@ const DEFAULT_PORTS = {
   "https:": 443
 };
 
-const HEADER_BLACKLIST = [ 'host' ];
+const HEADER_BLACKLIST = [ "host" ];
 
 util.inherits(CachedResponse, Readable);
 
@@ -31,11 +31,11 @@ String.prototype.endsWith = function(suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-function join (baseUrl, reqUrl) {
-  var base = url.parse(baseUrl);
-  var u = url.parse(reqUrl);
-  base.pathname = path.join(base.pathname, u.pathname);
-  return url.format(base);
+function rebase (url1, url2) {
+  var u1 = url.parse(url1);
+  var u2 = url.parse(url2);
+  u1.pathname = path.join(u1.pathname, u2.pathname);
+  return url.format(u1);
 }
 
 function Cache (opts) {
@@ -51,7 +51,7 @@ function Cache (opts) {
       cb(new CachedResponse(store.get(req)), { hit: true });
     }
     else {
-      var upstreamUrl = join(opts.base, req.url);
+      var upstreamUrl = rebase(opts.base, req.url);
 
       var upstreamReq = http.request(upstreamUrl, function (upstreamRes) {
         upstreamRes.pipe(store.setStream(req, {
@@ -62,7 +62,7 @@ function Cache (opts) {
       });
 
       Object.keys(req.headers).forEach(function(key) {
-        if (key in HEADER_BLACKLIST) return;
+        if (HEADER_BLACKLIST.indexOf(key) !== -1) return;
         upstreamReq.setHeader(key, req.headers[key]);
       });
 
