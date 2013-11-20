@@ -1,11 +1,12 @@
 var http = require('http');
-var request = require('request');
 var fs = require('fs');
 var util = require('util');
 var colors = require('colors');
 var format = require('util').format;
 var Cache = require('./cache');
 var storage = require('./storage');
+
+const LOGO = '::[oo]'.inverse;
 
 module.exports = function Dictaphone(opts, baseUrl) {
   var self = this;
@@ -57,7 +58,7 @@ module.exports = function Dictaphone(opts, baseUrl) {
 
     var proxy = HOST + ':' + PORT;
     var upstream = baseUrl || 'NONE';
-    console.log(util.format('dictaphone proxying %s on %s', upstream.yellow, proxy.white));
+    console.log(util.format('%s\tdictaphone proxying %s on %s', LOGO.blue, upstream.yellow, proxy.white));
     console.log();
   };
 

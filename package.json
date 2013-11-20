@@ -1,0 +1,18 @@
+{
+  "name": "dictaphone",
+  "version": "0.0.1",
+  "author": "Mike Larsson <mikelarssonftw@gmail.com>",
+  "description": "A simple, single-host caching proxy",
+  "bin": {
+    "dictaphone": "./bin/dictaphone.js"
+  },
+  "main": "./index",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+    "commander": "~2.0.0",
+    "colors": "~0.6.2"
+  }
+}
