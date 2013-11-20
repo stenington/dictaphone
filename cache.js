@@ -38,23 +38,37 @@ function rebase (url1, url2) {
   return url.format(u1);
 }
 
+function normalize (req, params) {
+  var u = url.parse(req.url, true);
+  if (params && u.query) {
+    params.forEach(function (param) {
+      if (u.query[param] !== undefined)
+        u.query[param] = 'XXX';
+    });
+    delete u.search;
+    req.url = url.format(u);
+  }
+  return req;
+}
+
 function Cache (opts) {
   var self = this;
 
   var store = opts.store;
+  var ignore = opts.ignore;
   var proxiedUrl = url.parse(opts.base);
   if (!proxiedUrl.port)
     proxiedUrl.port = DEFAULT_PORTS[proxiedUrl.protocol];
 
   self.request = function (req, cb) {
-    if (store.has(req)) {
+    if (store.has(normalize(req, ignore))) {
       cb(new CachedResponse(store.get(req)), { hit: true });
     }
     else {
       var upstreamUrl = rebase(opts.base, req.url);
 
       var upstreamReq = http.request(upstreamUrl, function (upstreamRes) {
-        upstreamRes.pipe(store.setStream(req, {
+        upstreamRes.pipe(store.setStream(normalize(req, ignore), {
           statusCode: upstreamRes.statusCode,
           headers: upstreamRes.headers
         }));

@@ -14,7 +14,8 @@ opts
   .usage('[options] <host>')
   .description('single-host caching proxy')
   .option('-c, --cache-file <file>', 'use filesystem cache')
-  .option('-p, --port <port>', 'run proxy on specified port');
+  .option('-p, --port <port>', 'run proxy on specified port')
+  .option('-i, --ignore-values <params>', 'comma-separated list of query parameters to ignore for caching');
 
 opts.on('--help', function () {
   console.log('  Examples: dictaphone.js is a single-host caching proxy\n');
@@ -31,9 +32,14 @@ var baseUrl = opts.args[0] || undefined;
 if (baseUrl && !baseUrl.match(/http[s]?:\/\//))
   baseUrl = 'http://' + baseUrl;
 
+var ignore = [];
+if (opts.ignoreValues)
+  Array.prototype.push.apply(ignore, opts.ignoreValues.split(','));
+
 var d = new Dictaphone({
   cacheFile: opts.cacheFile,
-  port: opts.port
+  port: opts.port,
+  ignoreParams: ignore
 }, baseUrl);
 
 d.run();
