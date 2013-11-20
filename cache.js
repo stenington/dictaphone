@@ -56,39 +56,49 @@ function Cache (opts) {
 
   var store = opts.store;
   var ignore = opts.ignore;
-  var proxiedUrl = url.parse(opts.base);
-  if (!proxiedUrl.port)
-    proxiedUrl.port = DEFAULT_PORTS[proxiedUrl.protocol];
+  var shouldProxy = !!opts.base;
 
   self.request = function (req, cb) {
     if (store.has(normalize(req, ignore))) {
       cb(new CachedResponse(store.get(req)), { hit: true });
     }
-    else {
-      var upstreamUrl = rebase(opts.base, req.url);
-
-      var upstreamReq = http.request(upstreamUrl, function (upstreamRes) {
+    else if (shouldProxy) {
+      proxy(req, function (upstreamUrl, upstreamRes) {
         upstreamRes.pipe(store.setStream(normalize(req, ignore), {
           statusCode: upstreamRes.statusCode,
           headers: upstreamRes.headers
         }));
-        cb(upstreamRes, { hit: false, fullUrl: upstreamUrl });
-      });
-
-      Object.keys(req.headers).forEach(function(key) {
-        if (HEADER_BLACKLIST.indexOf(key) !== -1) return;
-        upstreamReq.setHeader(key, req.headers[key]);
-      });
-
-      upstreamReq.on('error', function (err) {
-        console.log(util.format('Error making upstream request: %s\t%s'.red, err.message, upstreamUrl));
-      });
-
-      if (req.body)
-        upstreamReq.write(req.body);
-
-      upstreamReq.end();
+        cb(upstreamRes, { hit: false, proxied: true, fullUrl: upstreamUrl });
+      }); 
     }
+    else {
+      cb(new CachedResponse({
+        statusCode: 404,
+        body: "NO PROXY - NOT CACHED\n"
+      }), { hit: false, proxied: false });      
+    }
+  };
+
+  function proxy (req, cb) {
+    var upstreamUrl = rebase(opts.base, req.url);
+
+    var upstreamReq = http.request(upstreamUrl, function (upstreamRes) {
+      cb(upstreamUrl, upstreamRes);
+    });
+
+    Object.keys(req.headers).forEach(function(key) {
+      if (HEADER_BLACKLIST.indexOf(key) !== -1) return;
+      upstreamReq.setHeader(key, req.headers[key]);
+    });
+
+    upstreamReq.on('error', function (err) {
+      console.log(util.format('Error making upstream request: %s\t%s'.red, err.message, upstreamUrl));
+    });
+
+    if (req.body)
+      upstreamReq.write(req.body);
+
+    upstreamReq.end();
   };
 
   return self;

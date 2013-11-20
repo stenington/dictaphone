@@ -17,7 +17,10 @@ module.exports = function Dictaphone(opts, baseUrl) {
   });
 
   function log (reqData, resCode, cacheData) {
-    var indicator = cacheData.hit ? '  ' : '->';
+    var indicator;
+    if (cacheData.hit) indicator = '  ';
+    else if (cacheData.proxied) indicator = '->';
+    else indicator = '-X';
     var msg = format('%s %s\t%s %s %s', indicator, resCode, reqData.method, reqData.url, reqData.body);
     if (cacheData.fullUrl) msg += '\t' + cacheData.fullUrl;
     msg = cacheData.hit ? msg.white : msg.yellow;
@@ -53,7 +56,8 @@ module.exports = function Dictaphone(opts, baseUrl) {
     server.listen(PORT, HOST);
 
     var proxy = HOST + ':' + PORT;
-    console.log(util.format('dictaphone proxying %s on %s', baseUrl.yellow, proxy.white));
+    var upstream = baseUrl || 'NONE';
+    console.log(util.format('dictaphone proxying %s on %s', upstream.yellow, proxy.white));
     console.log();
   };
 
