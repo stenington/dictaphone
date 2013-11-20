@@ -1,4 +1,5 @@
 var opts = require('commander');
+var url = require('url');
 var Dictaphone = require('./');
 
 /*  dictaphone.js - single-host caching proxy
@@ -12,7 +13,8 @@ opts
   .version('0.0.1')
   .usage('[options] <host>')
   .description('single-host caching proxy')
-  .option('-c, --cache-file <file>', 'use filesystem cache');
+  .option('-c, --cache-file <file>', 'use filesystem cache')
+  .option('-p, --port <port>', 'run proxy on specified port');
 
 opts.on('--help', function () {
   console.log('  Examples: dictaphone.js is a single-host caching proxy\n');
@@ -25,11 +27,14 @@ opts.on('--help', function () {
 
 opts.parse(process.argv);
 
-var host = opts.args[0] || '';
+var baseUrl = opts.args[0] || undefined;
+if (baseUrl && !baseUrl.match(/http[s]?:\/\//))
+  baseUrl = 'http://' + baseUrl;
 
 var d = new Dictaphone({
-  cacheFile: opts.cacheFile
-}, host);
+  cacheFile: opts.cacheFile,
+  port: opts.port
+}, baseUrl);
 
 d.run();
 

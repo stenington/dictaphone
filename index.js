@@ -1,6 +1,7 @@
 var http = require('http');
 var request = require('request');
 var fs = require('fs');
+var util = require('util');
 var colors = require('colors');
 var format = require('util').format;
 var Cache = require('./cache');
@@ -23,8 +24,8 @@ module.exports = function Dictaphone(opts, baseUrl) {
   }
 
   self.run = function () {
-    var PORT = 8080;
-    var HOST = '127.0.0.1';
+    var PORT = opts.port || 8080;
+    var HOST = 'localhost';
 
     var server = http.createServer(function (req, res) {
       var body = '';
@@ -50,7 +51,8 @@ module.exports = function Dictaphone(opts, baseUrl) {
 
     server.listen(PORT, HOST);
 
-    console.log('dictaphone proxy running on', HOST + ':' + PORT);
+    var proxy = HOST + ':' + PORT;
+    console.log(util.format('dictaphone proxying %s on %s', baseUrl.yellow, proxy.white));
     console.log();
   };
 
