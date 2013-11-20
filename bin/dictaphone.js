@@ -1,17 +1,12 @@
+#!/usr/bin/env node
+
 var opts = require('commander');
 var url = require('url');
-var Dictaphone = require('./');
-
-/*  dictaphone.js - single-host caching proxy
- *
- *  dictaphone.js foo.org               -> cache calls in memory
- *  dictaphone.js foo.org -c foo/       -> use foo/ as cache
- *  dictaphone.js foo.org -c foo/ -x    -> never hit foo.org; use only pre-cached responses, or return error
- */
+var Dictaphone = require('../');
 
 opts
   .version('0.0.1')
-  .usage('[options] <host>')
+  .usage('[options] [host]')
   .description('single-host caching proxy')
   .option('-c, --cache-file <file>', 'use filesystem cache')
   .option('-p, --port <port>', 'run proxy on specified port')
