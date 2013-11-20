@@ -3,8 +3,8 @@ var fs = require('fs');
 var util = require('util');
 var colors = require('colors');
 var format = require('util').format;
-var Cache = require('./cache');
-var storage = require('./storage');
+var Cache = require('./lib/cache');
+var storage = require('./lib/storage');
 
 module.exports = function Dictaphone(opts, baseUrl) {
   var self = this;
