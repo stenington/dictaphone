@@ -2,6 +2,7 @@
 
 var opts = require('commander');
 var url = require('url');
+var colors = require('colors');
 var Dictaphone = require('../');
 
 opts
@@ -18,7 +19,7 @@ opts.on('--help', function () {
   console.log('    $ dictaphone.js -c foo foo.org     proxy to foo.org and cache responses in ./foo');
   console.log('    $ dictaphone.js -c foo             do not proxy; only return cached responses in ./foo');
   console.log('');
-  console.log('  [::oo]');
+  console.log('  ' + Dictaphone.LOGO);
   console.log('');
 
 });

@@ -6,8 +6,6 @@ var format = require('util').format;
 var Cache = require('./cache');
 var storage = require('./storage');
 
-const LOGO = '::[oo]'.inverse;
-
 module.exports = function Dictaphone(opts, baseUrl) {
   var self = this;
 
@@ -64,3 +62,7 @@ module.exports = function Dictaphone(opts, baseUrl) {
 
   return self;
 }
+
+const LOGO = '::[oo]'.inverse;
+module.exports.LOGO = LOGO;
+
