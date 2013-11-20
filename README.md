@@ -1,4 +1,5 @@
 # dictaphone 
+`::[oo]`
 **single-host caching proxy**
 
 ## Examples
@@ -12,3 +13,4 @@ $ dictaphone.js -c foo/               -> never hit foo.org; use only pre-cached 
 ```
 $ dictaphone.js -h
 ```
+
