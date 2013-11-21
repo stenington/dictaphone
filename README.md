@@ -14,6 +14,12 @@ $ curl localhost:8080/some/path
 In this example, `curl` will return http://example.org/some/path to you, and future requests for it
 will be returned from dictaphone's cache while it remains running.
 
+## Purpose
+
+`dictaphone` lets you record an http conversation with a host and replay the responses, again and again. This
+can help ensure consistency when testing, or put a buffer between you and a live system you may not want to abuse,
+for example.
+
 ## Examples
 
 ### Simple caching
