@@ -56,3 +56,6 @@ recorded set of requests, knowing that you'll never hit the actual host if that 
 $ bin/dictaphone.js -h
 ```
 
+## License
+**dictaphone** is Copyright (c) 2013 Mike Larsson @stenington and licenced under the MIT licence. All rights not explicitly granted
+in the MIT license are reserved. See the included LICENSE file for more details.
