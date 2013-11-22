@@ -2,6 +2,11 @@
 `::[oo]`
 **single-host caching proxy**
 
+## What Is It?
+`dictaphone` lets you record an http conversation with a host and replay the responses, again and again. This
+can help ensure consistency when testing, or put a buffer between you and a live system you may not want to abuse,
+for example.
+
 ## Quick Start
 
 ``` bash
