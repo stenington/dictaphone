@@ -20,7 +20,7 @@ module.exports = function Dictaphone(opts, baseUrl) {
     if (cacheData.hit) indicator = '  ';
     else if (cacheData.proxied) indicator = '->';
     else indicator = '-X';
-    var msg = format('%s %s\t%s %s %s', indicator, resCode, reqData.method, reqData.url, reqData.body);
+    var msg = format('%s %s\t%s %s %s', indicator, resCode, reqData.original.method, reqData.original.url, reqData.original.body);
     if (cacheData.fullUrl) msg += '\t' + cacheData.fullUrl;
     msg = cacheData.hit ? msg.white : msg.yellow;
     console.log(msg);

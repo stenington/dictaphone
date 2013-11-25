@@ -7,9 +7,9 @@ var Cache = require('../lib/cache');
 
 function FakeStorage () {
   return {
-    has: function (data) { 
-      this.lastData = data;
-      return !data.url.match(/uncached/);
+    has: function (key) { 
+      this.lastKey = key;
+      return !key.original.url.match(/uncached/);
     },
     get: function () {
       return {
@@ -84,11 +84,11 @@ describe('Cache', function () {
       .get('/foo?a=1').reply(200, 'Hi')
       .get('/foo?a=2').reply(200, 'Hi again');
     request(url + '/foo?a=1', function (error, response, body) {
-      var data1 = store.lastData;
+      var data1 = store.lastKey;
       request(url + '/foo?a=2', function (error, response, body) {
-        var data2 = store.lastData;
-        data1.cacheableUrl.should.not.equal(data2.cacheableUrl);
-        data1.id.should.not.equal(data2.id);
+        var data2 = store.lastKey;
+        data1.id.short().should.not.equal(data2.id.short());
+        data1.id.long().should.not.equal(data2.id.long());
         done();
       });
     });
@@ -103,14 +103,15 @@ describe('Cache', function () {
       body: 'something',
       method: 'POST'
     }, function (error, response, body) {
-      var data1 = store.lastData;
+      var data1 = store.lastKey;
       request({
         url: url + '/uncached',
         body: 'something else',
         method: 'POST'
       }, function (error, response, body) {
-        var data2 = store.lastData;
-        data1.should.not.equal(data2);
+        var data2 = store.lastKey;
+        data1.id.short().should.not.equal(data2.id.short());
+        data1.id.long().should.not.equal(data2.id.long());
         done();
       });
     });
@@ -121,11 +122,11 @@ describe('Cache', function () {
       .get('/foo?a=1&ignore_me=1').reply(200, 'Hi')
       .get('/foo?a=1&ignore_me=2').reply(200, 'Hi again');
     request(url + '/foo?a=1&ignore_me=1', function (error, response, body) {
-      var data1 = store.lastData;
+      var data1 = store.lastKey;
       request(url + '/foo?a=1&ignore_me=2', function (error, response, body) {
-        var data2 = store.lastData;
-        data1.cacheableUrl.should.equal(data2.cacheableUrl);
-        data1.id.should.equal(data2.id);
+        var data2 = store.lastKey;
+        data1.id.short().should.equal(data2.id.short());
+        data1.id.long().should.equal(data2.id.long());
         done();
       });
     });
