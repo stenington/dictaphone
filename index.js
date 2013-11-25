@@ -30,27 +30,10 @@ module.exports = function Dictaphone(opts, baseUrl) {
     var PORT = opts.port || 8080;
     var HOST = 'localhost';
 
-    var server = http.createServer(function (req, res) {
-      var body = '';
-
-      req.on('data', function (chunk) {
-        body += chunk;
-      });
-
-      req.on('end', function () {
-        var data = {
-          url: req.url,
-          method: req.method,
-          headers: req.headers,
-          body: body 
-        };
-        cache.request(data, function (cacheRes, info) {
-          log(data, cacheRes.statusCode, info);
-          res.writeHead(cacheRes.statusCode, cacheRes.headers);
-          cacheRes.pipe(res); 
-        });
-      });
+    cache.on('response', function (data) {
+      log(data.request, data.response.statusCode, data.cacheInfo);
     });
+    var server = http.createServer(cache.handleRequest);
 
     server.listen(PORT, HOST);
 

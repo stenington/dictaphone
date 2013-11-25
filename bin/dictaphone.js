@@ -6,12 +6,13 @@ var colors = require('colors');
 var Dictaphone = require('../');
 
 opts
-  .version('0.0.1')
+  .version('0.0.2')
   .usage('[options] [host]')
   .description('single-host caching proxy')
   .option('-c, --cache-file <file>', 'use filesystem cache')
   .option('-p, --port <port>', 'run proxy on specified port')
-  .option('-i, --ignore-values <params>', 'comma-separated list of query parameters to ignore for caching');
+  .option('-i, --ignore-values <params>', 'comma-separated list of query parameters to ignore for caching')
+  .option('-x, --no-proxy', 'return a canned 404 for uncached request responses (implied by omitting host argument)');
 
 opts.on('--help', function () {
   console.log('  Examples: dictaphone.js is a single-host caching proxy\n');
@@ -26,7 +27,7 @@ opts.on('--help', function () {
 
 opts.parse(process.argv);
 
-var baseUrl = opts.args[0] || undefined;
+var baseUrl = opts.noProxy ? undefined : opts.args[0];
 if (baseUrl && !baseUrl.match(/http[s]?:\/\//))
   baseUrl = 'http://' + baseUrl;
 

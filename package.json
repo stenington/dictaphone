@@ -1,6 +1,6 @@
 {
   "name": "dictaphone",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Mike Larsson <mikelarssonftw@gmail.com>",
   "description": "A simple, single-host caching proxy",
   "bin": {
@@ -14,6 +14,14 @@
   "dependencies": {
     "commander": "~2.0.0",
     "colors": "~0.6.2",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "response-stream": "0.0.0",
+    "duplexer": "~0.1.1",
+    "concat-stream": "~1.2.0"
+  },
+  "devDependencies": {
+    "should": "~2.1.0",
+    "nock": "~0.23.0",
+    "request": "~2.27.0"
   }
 }
