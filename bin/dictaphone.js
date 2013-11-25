@@ -6,7 +6,7 @@ var colors = require('colors');
 var Dictaphone = require('../');
 
 opts
-  .version('0.0.2')
+  .version('0.0.3')
   .usage('[options] [host]')
   .description('single-host caching proxy')
   .option('-c, --cache-file <file>', 'use filesystem cache')

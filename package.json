@@ -1,6 +1,6 @@
 {
   "name": "dictaphone",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Mike Larsson <mikelarssonftw@gmail.com>",
   "description": "A simple, single-host caching proxy",
   "bin": {
