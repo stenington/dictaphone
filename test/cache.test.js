@@ -7,9 +7,9 @@ var Cache = require('../lib/cache');
 
 function FakeStorage () {
   return {
-    has: function (req) { 
-      this.lastKey = req.url; // req.url is the key by which responses are stored
-      return !req.url.match(/uncached/);
+    has: function (data) { 
+      this.lastData = data;
+      return !data.url.match(/uncached/);
     },
     get: function () {
       return {
@@ -79,15 +79,38 @@ describe('Cache', function () {
     });
   });
 
-  it('should include query parameters when caching' , function (done) {
+  it('should include query parameters when caching', function (done) {
   var context = nock('http://example.org')
       .get('/foo?a=1').reply(200, 'Hi')
       .get('/foo?a=2').reply(200, 'Hi again');
     request(url + '/foo?a=1', function (error, response, body) {
-      var key1 = store.lastKey;
+      var data1 = store.lastData;
       request(url + '/foo?a=2', function (error, response, body) {
-        var key2 = store.lastKey;
-        key1.should.not.equal(key2);
+        var data2 = store.lastData;
+        data1.cacheableUrl.should.not.equal(data2.cacheableUrl);
+        data1.id.should.not.equal(data2.id);
+        done();
+      });
+    });
+  });
+
+  it('should include body when caching', function (done) {
+    var context = nock('http://example.org')
+      .post('/uncached').reply(200, 'Hi')
+      .post('/uncached').reply(200, 'Hi again');
+    request({
+      url: url + '/uncached',
+      body: 'something',
+      method: 'POST'
+    }, function (error, response, body) {
+      var data1 = store.lastData;
+      request({
+        url: url + '/uncached',
+        body: 'something else',
+        method: 'POST'
+      }, function (error, response, body) {
+        var data2 = store.lastData;
+        data1.should.not.equal(data2);
         done();
       });
     });
@@ -98,10 +121,11 @@ describe('Cache', function () {
       .get('/foo?a=1&ignore_me=1').reply(200, 'Hi')
       .get('/foo?a=1&ignore_me=2').reply(200, 'Hi again');
     request(url + '/foo?a=1&ignore_me=1', function (error, response, body) {
-      var key1 = store.lastKey;
+      var data1 = store.lastData;
       request(url + '/foo?a=1&ignore_me=2', function (error, response, body) {
-        var key2 = store.lastKey;
-        key1.should.equal(key2);
+        var data2 = store.lastData;
+        data1.cacheableUrl.should.equal(data2.cacheableUrl);
+        data1.id.should.equal(data2.id);
         done();
       });
     });
